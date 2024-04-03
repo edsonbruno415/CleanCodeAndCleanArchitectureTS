@@ -12,5 +12,6 @@ test("Deve criar uma conta para o passageiro", async function () {
 		isPassenger: true
 	};
 	const output = await axios.post("http://localhost:3000/signup", input);
-	console.log(output.status, output.data);
+	console.log('STATUS', output.status);
+  console.log('DATA:', output.data);
 });
