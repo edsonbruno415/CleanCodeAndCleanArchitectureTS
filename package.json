@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "npx jest test/**.*ts --silent",
+    "test": "npx jest test/**.*ts --runInBand --silent",
     "test:cov": "npx jest --watch test/**.*ts --coverage",
     "start": "npx nodemon src/api.ts"
   },
