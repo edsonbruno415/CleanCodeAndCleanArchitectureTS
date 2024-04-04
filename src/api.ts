@@ -17,9 +17,8 @@ class Database {
   private INSERT_ONE = "insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)";
   private FIND_BY_EMAIL = "select * from cccat16.account where email = $1";
   private FIND_BY_ACCOUNT_ID = "select * from cccat16.account where account_id = $1";
-  connectionString;
 
-  constructor(connectionString) {
+  constructor(readonly connectionString) {
     this.connectionString = pgp()(connectionString);
   }
 
@@ -42,6 +41,22 @@ class Database {
   }
 }
 
+class User {
+  id; name; email; cpf; carPlate; isPassenger; isDriver;
+  constructor({ id, name, email, cpf, carPlate, isPassenger, isDriver }) {
+    if (isDriver && !isValidCarPlate(carPlate)) {
+      throw new Error('Invalid CarPlate');
+    }
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.cpf = cpf;
+    this.carPlate = carPlate;
+    this.isPassenger = isPassenger;
+    this.isDriver = isDriver;
+  }
+}
+
 const POSTGRES_CONNECTION = "postgres://postgres:123456@localhost:5432/app";
 
 const STATUS_CODE = {
@@ -56,20 +71,15 @@ app.post("/signup", async function (req, res) {
   try {
     const id = generateId();
 
-    const [acc] = await database.findByEmail({ email });
+    const [account] = await database.findByEmail({ email });
 
-    if (acc) throw new Error('Account already exists');
+    if (account) throw new Error('Account already exists');
     if (!isValidName(name)) throw new Error('Invalid name');
     if (!isValidEmail(email)) throw new Error('Invalid Email');
     if (!validate(cpf)) throw new Error('Invalid CPF');
 
-    if (req.body.isDriver) {
-      if (!isValidCarPlate(carPlate)) throw new Error('Invalid CarPlate');
-      await database.insertOne({ id, name, email, cpf, carPlate, isPassenger: !!isPassenger, isDriver: !!isDriver });
-    }
-    if (req.body.isPassenger) {
-      await database.insertOne({ id, name, email, cpf, carPlate, isPassenger: !!isPassenger, isDriver: !!isDriver });
-    }
+    const user = new User({ id, name, email, cpf, carPlate, isPassenger: !!isPassenger, isDriver: !!isDriver });
+    await database.insertOne(user);
 
     res.status(STATUS_CODE.CREATED).json({
       accountId: id,
