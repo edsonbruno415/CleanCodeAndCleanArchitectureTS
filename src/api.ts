@@ -12,7 +12,7 @@ const isValidEmail = email => email && email.match(/^(.+)@(.+)$/);
 const isValidCarPlate = carPlate => carPlate && carPlate.match(/[A-Z]{3}[0-9]{4}/);
 
 class Database {
-  private INSERT_COMMAND = "insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)";
+  private INSERT_ONE = "insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)";
   private FIND_BY_EMAIL = "select * from cccat16.account where email = $1";
   private FIND_BY_ACCOUNT_ID = "select * from cccat16.account where account_id = $1";
 
@@ -21,7 +21,7 @@ class Database {
   }
 
   async insertOne({ id, name, email, cpf, carPlate, isPassenger, isDriver }) {
-    return await this.connectionString.query(this.INSERT_COMMAND, [id, name, email, cpf, carPlate, isPassenger, isDriver]);
+    return await this.connectionString.query(this.INSERT_ONE, [id, name, email, cpf, carPlate, isPassenger, isDriver]);
   }
 
   async findByEmail({ email }) {

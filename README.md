@@ -20,6 +20,6 @@ executar o docker-compose.yml
 
 `docker-compose up -d`
 
-executar o psql terminal para criar tabelas
+executar o psql no terminal para criar tabelas
 
-`docker exec -it postgres_cccat16 psql -h localhost --username postgres --dbname app`
+`docker exec -it postgres_cccat16 psql --host=localhost --username=postgres --dbname=app --command="$(cat create.sql)"`

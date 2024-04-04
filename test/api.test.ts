@@ -123,11 +123,11 @@ test("should be return an error when Driver has wrong carPlate", async function 
 });
 
 test("should be return an existing account", async function () {
-  const accountId = '9040de3d-8946-48f7-9e3e-ca55ce5d4f84';
+  const accountId = 'b65f54f6-798d-4aa9-bfce-cb906f8aac49';
   const passenger = {
-    account_id: '9040de3d-8946-48f7-9e3e-ca55ce5d4f84',
+    account_id: 'b65f54f6-798d-4aa9-bfce-cb906f8aac49',
     name: 'John Doe',
-    email: 'john.doe0.33876381161690716@gmail.com',
+    email: 'john.doe0.2722987238191166@gmail.com',
     cpf: '87748248800',
     car_plate: null,
     is_passenger: true,
