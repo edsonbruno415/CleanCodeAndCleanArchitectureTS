@@ -44,6 +44,12 @@ class Database {
 
 const POSTGRES_CONNECTION = "postgres://postgres:123456@localhost:5432/app";
 
+const STATUS_CODE = {
+  CREATED: 201,
+  OK: 200,
+  UNPROCESSABLE_ENTITY: 422,
+};
+
 app.post("/signup", async function (req, res) {
   const { name, email, cpf, carPlate, isPassenger, isDriver } = req.body;
   const database = new Database(POSTGRES_CONNECTION);
@@ -65,12 +71,12 @@ app.post("/signup", async function (req, res) {
       await database.insertOne({ id, name, email, cpf, carPlate, isPassenger: !!isPassenger, isDriver: !!isDriver });
     }
 
-    res.status(201).json({
+    res.status(STATUS_CODE.CREATED).json({
       accountId: id,
     });
   }
   catch (error) {
-    res.status(422).json({ error: error.message });
+    res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).json({ error: error.message });
   }
   finally {
     await database.close();
@@ -85,9 +91,9 @@ app.get("/getAccount", async function (req, res) {
     const [account] = await database.findByAccountId({ id });
     if (!account) throw new Error('Account not found');
 
-    res.status(200).json(account);
+    res.status(STATUS_CODE.OK).json(account);
   } catch (error) {
-    res.status(422).json({
+    res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).json({
       error: error.message,
     });
   }
