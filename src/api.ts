@@ -40,7 +40,6 @@ class Database {
 const POSTGRES_CONNECTION = "postgres://postgres:123456@localhost:5432/app";
 
 app.post("/signup", async function (req, res) {
-  let result;
   const { name, email, cpf, carPlate, isPassenger, isDriver } = req.body;
 
   const database = new Database(POSTGRES_CONNECTION);
@@ -50,30 +49,21 @@ app.post("/signup", async function (req, res) {
     const [acc] = await database.findByEmail({ email });
 
     if (acc) throw new Error('Account already exists');
-    if (!isValidName(req.body.name)) throw new Error('Invalid name');
-    if (!isValidEmail(req.body.email)) throw new Error('Invalid Email');
-    if (!validate(req.body.cpf)) throw new Error('Invalid CPF');
+    if (!isValidName(name)) throw new Error('Invalid name');
+    if (!isValidEmail(email)) throw new Error('Invalid Email');
+    if (!validate(cpf)) throw new Error('Invalid CPF');
 
     if (req.body.isDriver) {
-      if (!isValidCarPlate(req.body.carPlate)) throw new Error('Invalid CarPlate');
+      if (!isValidCarPlate(carPlate)) throw new Error('Invalid CarPlate');
       await database.insertOne({ id, name, email, cpf, carPlate, isPassenger: !!isPassenger, isDriver: !!isDriver });
-
-      const obj = {
-        accountId: id
-      };
-      result = obj;
-
     }
     if (req.body.isPassenger) {
       await database.insertOne({ id, name, email, cpf, carPlate, isPassenger: !!isPassenger, isDriver: !!isDriver });
-
-      const obj = {
-        accountId: id
-      };
-      result = obj;
     }
 
-    res.json(result);
+    res.json({
+      accountId: id,
+    });
   }
   catch (error) {
     res.send(error.message);
@@ -91,7 +81,7 @@ app.get("/getAccount", async function (req, res) {
     const [account] = await database.findByAccountId({ id });
     if(!account) throw new Error('Account not found!');
 
-    res.send(account);
+    res.json(account);
   } catch (error) {
     res.send(error.message);
   } finally {
