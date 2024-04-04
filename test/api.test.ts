@@ -101,3 +101,23 @@ test("should be return an error with wrong cpf", async function () {
   // expect(output.status).toBe(expected.output.status);
   expect(output.data).toBe(expected.output.data);
 });
+
+test("should be return an error when Driver has wrong carPlate", async function () {
+	const input = {
+		name: "John Doe",
+    email: `john.doe${Math.random()}@gmail.com`,
+		cpf: "87748248800",
+		isDriver: true,
+    carPlate: '@@@@',
+	};
+  const expected = {
+    output: {
+      status: 422,
+      data: 'Invalid CarPlate',
+    },
+  };
+
+	const output = await axios.post("http://localhost:3005/signup", input);
+  // expect(output.status).toBe(expected.output.status);
+  expect(output.data).toBe(expected.output.data);
+});

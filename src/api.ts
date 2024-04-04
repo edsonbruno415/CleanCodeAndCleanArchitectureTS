@@ -9,6 +9,8 @@ const isValidName = name => name.match(/[a-zA-Z] [a-zA-Z]+/);
 
 const isValidEmail = email => email.match(/^(.+)@(.+)$/);
 
+const isValidCarPlate = carPlate => carPlate.match(/[A-Z]{3}[0-9]{4}/);
+
 app.post("/signup", async function (req, res) {
   let result;
   const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
@@ -23,17 +25,14 @@ app.post("/signup", async function (req, res) {
     if (!validate(req.body.cpf)) throw new Error('Invalid CPF');
 
     if (req.body.isDriver) {
-      if (req.body.carPlate.match(/[A-Z]{3}[0-9]{4}/)) {
-        await connection.query("insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, req.body.name, req.body.email, req.body.cpf, req.body.carPlate, !!req.body.isPassenger, !!req.body.isDriver]);
+      if (!isValidCarPlate(req.body.carPlate)) throw new Error('Invalid CarPlate');
+      await connection.query("insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, req.body.name, req.body.email, req.body.cpf, req.body.carPlate, !!req.body.isPassenger, !!req.body.isDriver]);
 
-        const obj = {
-          accountId: id
-        };
-        result = obj;
-      } else {
-        // invalid car plate
-        result = -5;
-      }
+      const obj = {
+        accountId: id
+      };
+      result = obj;
+
     } else {
       await connection.query("insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, req.body.name, req.body.email, req.body.cpf, req.body.carPlate, !!req.body.isPassenger, !!req.body.isDriver]);
 
