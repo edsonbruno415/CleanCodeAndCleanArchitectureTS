@@ -1,9 +1,5 @@
 import axios from "axios";
 
-/* axios.defaults.validateStatus = function () {
-  return true;
-} */
-
 test("Deve criar uma conta para o passageiro", async function () {
   const input = {
     name: "John Doe",
@@ -16,8 +12,8 @@ test("Deve criar uma conta para o passageiro", async function () {
   };
 
   const response = await axios.post("http://localhost:3005/signup", input);
-  console.log('STATUS',response.status);
-  console.log('DATA',response.data);
+  console.log('STATUS', response.status);
+  console.log('DATA', response.data);
   expect(response.status).toBe(201);
 });
 
@@ -35,7 +31,7 @@ test("should be return an error when email already exists", async function () {
 
   try {
     await axios.post("http://localhost:3005/signup", input);
-  } catch (error) {
+  } catch (error: any) {
     const { data, status } = error.response;
     expect(status).toBe(422);
     expect(data).toEqual(expected);
@@ -55,7 +51,7 @@ test("should be return an error when send wrong name", async function () {
 
   try {
     await axios.post("http://localhost:3005/signup", input);
-  } catch (error) {
+  } catch (error: any) {
     const { data, status } = error.response;
     expect(status).toBe(422);
     expect(data).toEqual(expected);
@@ -75,7 +71,7 @@ test("should be return an error when send wrong email", async function () {
 
   try {
     await axios.post("http://localhost:3005/signup", input);
-  } catch (error) {
+  } catch (error: any) {
     const { data, status } = error.response;
     expect(status).toBe(422);
     expect(data).toEqual(expected);
@@ -95,7 +91,7 @@ test("should be return an error with wrong cpf", async function () {
 
   try {
     await axios.post("http://localhost:3005/signup", input);
-  } catch (error) {
+  } catch (error: any) {
     const { data, status } = error.response;
     expect(status).toBe(422);
     expect(data).toEqual(expected);
@@ -116,7 +112,7 @@ test("should be return an error when Driver has wrong carPlate", async function 
 
   try {
     await axios.post("http://localhost:3005/signup", input);
-  } catch (error) {
+  } catch (error: any) {
     const { data, status } = error.response;
     expect(status).toBe(422);
     expect(data).toEqual(expected);
@@ -148,7 +144,7 @@ test("should be return an error when not found account", async function () {
 
   try {
     await axios.get(`http://localhost:3005/getAccount?id=${accountId}`);
-  } catch (error) {
+  } catch (error: any) {
     const { data, status } = error.response;
     expect(status).toBe(422);
     expect(data).toEqual(expected);
