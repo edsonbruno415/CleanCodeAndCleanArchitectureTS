@@ -1,6 +1,6 @@
 import axios from "axios";
 
-test("Deve criar uma conta para o passageiro", async function () {
+test("should create a passenger account", async function () {
   const input = {
     name: "John Doe",
     email: `john.doe${Math.random()}@gmail.com`,
