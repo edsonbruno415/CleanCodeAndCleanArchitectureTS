@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "npx jest --watch test/**.*ts",
-    "start": "npx ts-node src/api.ts"
+    "test": "npx jest test/**.*ts",
+    "test:cov": "npx jest --watch test/**.*ts --coverage",
+    "start": "npx nodemon src/api.ts"
   },
   "dependencies": {
     "@types/express": "^4.17.17",
