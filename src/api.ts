@@ -18,7 +18,7 @@ app.post("/signup", async function (req, res) {
     const id = crypto.randomUUID();
 
     const [acc] = await connection.query("select * from cccat16.account where email = $1", [req.body.email]);
-    console.log('ACC', acc);
+
     if (acc) throw new Error('Account already exists');
     if (!isValidName(req.body.name)) throw new Error('Invalid name');
     if (!isValidEmail(req.body.email)) throw new Error('Invalid Email');
@@ -33,7 +33,8 @@ app.post("/signup", async function (req, res) {
       };
       result = obj;
 
-    } else {
+    }
+    if (req.body.isPassenger) {
       await connection.query("insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, req.body.name, req.body.email, req.body.cpf, req.body.carPlate, !!req.body.isPassenger, !!req.body.isDriver]);
 
       const obj = {
@@ -41,14 +42,10 @@ app.post("/signup", async function (req, res) {
       };
       result = obj;
     }
-    if (typeof result === "number") {
-      console.log('ERROR ' + result)
-      res.status(422).send(result + "");
-    }
+
     res.json(result);
   }
   catch (error) {
-    console.log(error.message);
     res.send(error.message);
   }
   finally {
