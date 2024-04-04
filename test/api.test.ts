@@ -121,3 +121,22 @@ test("should be return an error when Driver has wrong carPlate", async function 
   // expect(output.status).toBe(expected.output.status);
   expect(output.data).toBe(expected.output.data);
 });
+
+test("should be return an existing account", async function () {
+  const accountId = '9040de3d-8946-48f7-9e3e-ca55ce5d4f84';
+  const passenger = {
+    account_id: '9040de3d-8946-48f7-9e3e-ca55ce5d4f84',
+    name: 'John Doe',
+    email: 'john.doe0.33876381161690716@gmail.com',
+    cpf: '87748248800',
+    car_plate: null,
+    is_passenger: true,
+    is_driver: false
+  }
+	const output = await axios.get(`http://localhost:3005/getAccount?id=${accountId}`);
+
+  console.log('STATUS', output.status);
+  console.log('DATA', output.data);
+  // expect(output.status).toBe(expected.output.status);
+  expect(output.data).toEqual(passenger);
+});

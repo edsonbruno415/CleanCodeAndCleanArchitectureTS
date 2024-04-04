@@ -14,6 +14,7 @@ const isValidCarPlate = carPlate => carPlate && carPlate.match(/[A-Z]{3}[0-9]{4}
 class Database {
   private INSERT_COMMAND = "insert into cccat16.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)";
   private FIND_BY_EMAIL = "select * from cccat16.account where email = $1";
+  private FIND_BY_ACCOUNT_ID = "select * from cccat16.account where account_id = $1";
 
   constructor(readonly connectionString) {
     this.connectionString = pgp()(connectionString);
@@ -27,7 +28,11 @@ class Database {
     return await this.connectionString.query(this.FIND_BY_EMAIL, [email]);
   }
 
-  async close(){
+  async findByAccountId({ id }) {
+    return await this.connectionString.query(this.FIND_BY_ACCOUNT_ID, [id]);
+  }
+
+  async close() {
     return await this.connectionString.$pool.end();
   }
 }
@@ -74,6 +79,22 @@ app.post("/signup", async function (req, res) {
     res.send(error.message);
   }
   finally {
+    await database.close();
+  }
+});
+
+app.get("/getAccount", async function (req, res) {
+  const { id } = req.query;
+  const database = new Database(POSTGRES_CONNECTION);
+
+  try { 
+    const [account] = await database.findByAccountId({ id });
+    if(!account) throw new Error('Account not found!');
+
+    res.send(account);
+  } catch (error) {
+    res.send(error.message);
+  } finally {
     await database.close();
   }
 });
