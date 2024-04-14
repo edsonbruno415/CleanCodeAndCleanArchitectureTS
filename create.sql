@@ -11,3 +11,9 @@ create table cccat16.account (
 	is_passenger boolean not null default false,
 	is_driver boolean not null default false
 );
+
+-- set schema 'cccat16';
+
+-- select * from account;
+
+-- select name,email,is_passenger,is_driver from account where is_driver='true';

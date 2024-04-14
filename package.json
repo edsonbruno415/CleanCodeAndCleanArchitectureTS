@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "npx jest test/**.*ts --runInBand --silent",
-    "test:cov": "npx jest --watch test/**.*ts --coverage",
+    "test:cov": "npx jest --watchAll test/**.*ts --coverage",
     "start": "npx nodemon src/api.ts"
   },
   "dependencies": {
