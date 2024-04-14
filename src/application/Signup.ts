@@ -1,6 +1,6 @@
 
 import crypto from "crypto";
-import { validate } from "../validateCpf";
+import { validate } from "./validateCpf";
 import { Account } from "./Account";
 import { AccountDAO } from "../resources/accountDAO";
 

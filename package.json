@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npx jest test/**.*ts --runInBand --silent",
     "test:cov": "npx jest --watchAll test/**.*ts --coverage",
-    "start": "npx nodemon src/api.ts"
+    "start": "npx nodemon src/driver/api.ts"
   },
   "dependencies": {
     "@types/express": "^4.17.17",

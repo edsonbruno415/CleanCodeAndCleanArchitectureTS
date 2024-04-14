@@ -2,8 +2,8 @@ import express from "express";
 const app = express();
 app.use(express.json());
 
-import { Signup } from "./application/Signup";
-import { GetAccount } from "./application/GetAccount";
+import { Signup } from "../application/Signup";
+import { GetAccount } from "../application/GetAccount";
 
 const STATUS_CODE = Object.freeze({
   CREATED: 201,
