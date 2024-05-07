@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AccountDAODatabase } from "../src/resources/accountDAO";
 
 test("should create a passenger account", async function () {
   const input = {

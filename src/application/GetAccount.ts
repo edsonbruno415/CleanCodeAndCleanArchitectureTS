@@ -1,21 +1,16 @@
 import { AccountDAO } from "../resources/accountDAO";
-
 export class GetAccount {
-  constructor(readonly accountId: any) {
-    this.accountId = accountId;
-  }
+  constructor(readonly accountDAO: AccountDAO) {}
 
-  async execute(){
-    const accountDAO = new AccountDAO();
-  
+  async execute(input: any){
     try {
-      const [account] = await accountDAO.findByAccountId(this.accountId);
+      const [account] = await this.accountDAO.findByAccountId(input.id);
       if (!account) throw new Error('Account not found');
 
       return account;
     }
     finally {
-      await accountDAO.close();
+      await this.accountDAO.close();
     }
   }
 }

@@ -1,35 +1,28 @@
-
 import crypto from "crypto";
 import { validate } from "./validateCpf";
-import { Account } from "./Account";
 import { AccountDAO } from "../resources/accountDAO";
-
 export class Signup {
-  account;
-  constructor(data: any) {
-    const accountId = generateId();
-    const { name, email, cpf, carPlate, isPassenger, isDriver } = data;
-    this.account = new Account(accountId, name, email, cpf, carPlate, isPassenger, isDriver);
-  }
+  constructor(readonly accountDAO: AccountDAO) {}
 
-  async execute() {
-    const accountDAO = new AccountDAO();
+  async execute(input: any) {
     try {
-      const [account] = await accountDAO.findByEmail(this.account.email);
+      const account = input;
+      account.accountId = generateId();
+      const [existingAccount] = await this.accountDAO.findByEmail(account.email);
 
-      if (account) throw new Error('Account already exists');
-      if (!isValidName(this.account.name)) throw new Error('Invalid name');
-      if (!isValidEmail(this.account.email)) throw new Error('Invalid Email');
-      if (!validate(this.account.cpf)) throw new Error('Invalid CPF');
-
-      await accountDAO.insertOne(this.account);
+      if (existingAccount) throw new Error('Account already exists');
+      if (!isValidName(account.name)) throw new Error('Invalid name');
+      if (!isValidEmail(account.email)) throw new Error('Invalid Email');
+      if (!validate(account.cpf)) throw new Error('Invalid CPF');
+      if (account.isDriver && !isValidCarPlate(account.carPlate)) throw new Error('Invalid CarPlate');
+      await this.accountDAO.insertOne(account);
 
       return {
-        accountId: this.account.accountId,
+        accountId: account.accountId,
       };
     }
     finally {
-      await accountDAO.close();
+      await this.accountDAO.close();
     }
   }
 }
@@ -37,3 +30,4 @@ export class Signup {
 const generateId = () => crypto.randomUUID();
 const isValidName = (name: string) => name && name.match(/[a-zA-Z] [a-zA-Z]+/);
 const isValidEmail = (email: string) => email && email.match(/^(.+)@(.+)$/);
+const isValidCarPlate = (carPlate: string) => carPlate && carPlate.match(/[A-Z]{3}[0-9]{4}/);
